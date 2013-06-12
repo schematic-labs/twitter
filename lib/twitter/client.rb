@@ -65,7 +65,7 @@ module Twitter
 
     # Returns the remaining number of API requests available to the requesting user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/account/rate_limit_status
+    # @see https://dev.twitter.com/docs/api/1.1/get/account/rate_limit_status
     # @rate_limited No
     # @requires_authentication No
     #
@@ -75,13 +75,13 @@ module Twitter
     # @example Return the remaining number of API requests available to the requesting user
     #   Twitter.rate_limit_status
     def rate_limit_status(options={})
-      rate_limit_status = get("/1/account/rate_limit_status.json", options)
+      rate_limit_status = get("/1.1/account/rate_limit_status.json", options)
       Twitter::RateLimitStatus.new(rate_limit_status)
     end
 
     # Returns the requesting user if authentication was successful, otherwise raises {Twitter::Error::Unauthorized}
     #
-    # @see https://dev.twitter.com/docs/api/1/get/account/verify_credentials
+    # @see https://dev.twitter.com/docs/api/1.1/get/account/verify_credentials
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -90,13 +90,13 @@ module Twitter
     # @example Return the requesting user if authentication was successful
     #   Twitter.verify_credentials
     def verify_credentials(options={})
-      user = get("/1/account/verify_credentials.json", options)
+      user = get("/1.1/account/verify_credentials.json", options)
       Twitter::User.new(user)
     end
 
     # Ends the session of the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/account/end_session
+    # @see https://dev.twitter.com/docs/api/1.1/post/account/end_session
     # @rate_limited No
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -105,12 +105,12 @@ module Twitter
     # @example End the session of the authenticating user
     #   Twitter.end_session
     def end_session(options={})
-      post("/1/account/end_session.json", options)
+      post("/1.1/account/end_session.json", options)
     end
 
     # Sets which device Twitter delivers updates to for the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/account/update_delivery_device
+    # @see https://dev.twitter.com/docs/api/1.1/post/account/update_delivery_device
     # @rate_limited No
     # @requires_authentication Yes
     # @param device [String] Must be one of: 'sms', 'none'.
@@ -120,13 +120,13 @@ module Twitter
     # @example Turn SMS updates on for the authenticating user
     #   Twitter.update_delivery_device('sms')
     def update_delivery_device(device, options={})
-      user = post("/1/account/update_delivery_device.json", options.merge(:device => device))
+      user = post("/1.1/account/update_delivery_device.json", options.merge(:device => device))
       Twitter::User.new(user)
     end
 
     # Sets values that users are able to set under the "Account" tab of their settings page
     #
-    # @see https://dev.twitter.com/docs/api/1/post/account/update_profile
+    # @see https://dev.twitter.com/docs/api/1.1/post/account/update_profile
     # @note Only the options specified will be updated.
     # @rate_limited No
     # @requires_authentication Yes
@@ -140,13 +140,13 @@ module Twitter
     # @example Set authenticating user's name to Erik Michaels-Ober
     #   Twitter.update_profile(:name => "Erik Michaels-Ober")
     def update_profile(options={})
-      user = post("/1/account/update_profile.json", options)
+      user = post("/1.1/account/update_profile.json", options)
       Twitter::User.new(user)
     end
 
     # Updates the authenticating user's profile background image
     #
-    # @see https://dev.twitter.com/docs/api/1/post/account/update_profile_background_image
+    # @see https://dev.twitter.com/docs/api/1.1/post/account/update_profile_background_image
     # @rate_limited No
     # @requires_authentication Yes
     # @param image [String] The background image for the profile. Must be a valid GIF, JPG, or PNG image of less than 800 kilobytes in size. Images with width larger than 2048 pixels will be scaled down.
@@ -157,13 +157,13 @@ module Twitter
     # @example Update the authenticating user's profile background image
     #   Twitter.update_profile_background_image(File.new("we_concept_bg2.png"))
     def update_profile_background_image(image, options={})
-      user = post("/1/account/update_profile_background_image.json", options.merge(:image => image))
+      user = post("/1.1/account/update_profile_background_image.json", options.merge(:image => image))
       Twitter::User.new(user)
     end
 
     # Sets one or more hex values that control the color scheme of the authenticating user's profile
     #
-    # @see https://dev.twitter.com/docs/api/1/post/account/update_profile_colors
+    # @see https://dev.twitter.com/docs/api/1.1/post/account/update_profile_colors
     # @rate_limited No
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -177,13 +177,13 @@ module Twitter
     # @example Set authenticating user's profile background to black
     #   Twitter.update_profile_colors(:profile_background_color => '000000')
     def update_profile_colors(options={})
-      user = post("/1/account/update_profile_colors.json", options)
+      user = post("/1.1/account/update_profile_colors.json", options)
       Twitter::User.new(user)
     end
 
     # Updates the authenticating user's profile image
     #
-    # @see https://dev.twitter.com/docs/api/1/post/account/update_profile_image
+    # @see https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
     # @note This method asynchronously processes the uploaded file before updating the user's profile image URL. You can either update your local cache the next time you request the user's information, or, at least 5 seconds after uploading the image, ask for the updated URL using {Twitter::Client::User#profile_image}.
     # @rate_limited No
     # @requires_authentication Yes
@@ -194,33 +194,33 @@ module Twitter
     # @example Update the authenticating user's profile image
     #   Twitter.update_profile_image(File.new("me.jpeg"))
     def update_profile_image(image, options={})
-      user = post("/1/account/update_profile_image.json", options.merge(:image => image))
+      user = post("/1.1/account/update_profile_image.json", options.merge(:image => image))
       Twitter::User.new(user)
     end
 
     # Updates the authenticating user's settings.
     # Or, if no options supplied, returns settings (including current trend, geo and sleep time information) for the authenticating user.
     #
-    # @see https://dev.twitter.com/docs/api/1/post/account/settings
-    # @see https://dev.twitter.com/docs/api/1/get/account/settings
+    # @see https://dev.twitter.com/docs/api/1.1/post/account/settings
+    # @see https://dev.twitter.com/docs/api/1.1/get/account/settings
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
-    # @option options [Integer] :trend_location_woeid The Yahoo! Where On Earth ID to use as the user's default trend location. Global information is available by using 1 as the WOEID. The woeid must be one of the locations returned by {https://dev.twitter.com/docs/api/1/get/trends/available GET trends/available}.
+    # @option options [Integer] :trend_location_woeid The Yahoo! Where On Earth ID to use as the user's default trend location. Global information is available by using 1 as the WOEID. The woeid must be one of the locations returned by {https://dev.twitter.com/docs/api/1.1/get/trends/available GET trends/available}.
     # @option options [Boolean, String, Integer] :sleep_time_enabled When set to true, 't' or 1, will enable sleep time for the user. Sleep time is the time when push or SMS notifications should not be sent to the user.
     # @option options [Integer] :start_sleep_time The hour that sleep time should begin if it is enabled. The value for this parameter should be provided in {http://en.wikipedia.org/wiki/ISO_8601 ISO8601} format (i.e. 00-23). The time is considered to be in the same timezone as the user's time_zone setting.
     # @option options [Integer] :end_sleep_time The hour that sleep time should end if it is enabled. The value for this parameter should be provided in {http://en.wikipedia.org/wiki/ISO_8601 ISO8601} format (i.e. 00-23). The time is considered to be in the same timezone as the user's time_zone setting.
     # @option options [String] :time_zone The timezone dates and times should be displayed in for the user. The timezone must be one of the {http://api.rubyonrails.org/classes/ActiveSupport/TimeZone.html Rails TimeZone} names.
-    # @option options [String] :lang The language which Twitter should render in for this user. The language must be specified by the appropriate two letter ISO 639-1 representation. Currently supported languages are provided by {https://dev.twitter.com/docs/api/1/get/help/languages GET help/languages}.
+    # @option options [String] :lang The language which Twitter should render in for this user. The language must be specified by the appropriate two letter ISO 639-1 representation. Currently supported languages are provided by {https://dev.twitter.com/docs/api/1.1/get/help/languages GET help/languages}.
     # @return [Twitter::Settings]
     # @raise [Twitter::Error::Unauthorized] Error raised when supplied user credentials are not valid.
     # @example Return the settings for the authenticating user.
     #   Twitter.settings
     def settings(options={})
       settings = if options.size.zero?
-        get("/1/account/settings.json", options)
+        get("/1.1/account/settings.json", options)
       else
-        post("/1/account/settings.json", options)
+        post("/1.1/account/settings.json", options)
       end
       Twitter::Settings.new(settings)
     end
@@ -263,7 +263,7 @@ module Twitter
 
     # Returns an array of user objects that the authenticating user is blocking
     #
-    # @see https://dev.twitter.com/docs/api/1/get/blocks/blocking
+    # @see https://dev.twitter.com/docs/api/1.1/get/blocks/blocking
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -273,14 +273,14 @@ module Twitter
     # @example Return an array of user objects that the authenticating user is blocking
     #   Twitter.blocking
     def blocking(options={})
-      get("/1/blocks/blocking.json", options).map do |user|
+      get("/1.1/blocks/blocking.json", options).map do |user|
         Twitter::User.new(user)
       end
     end
 
     # Returns an array of numeric user ids the authenticating user is blocking
     #
-    # @see https://dev.twitter.com/docs/api/1/get/blocks/blocking/ids
+    # @see https://dev.twitter.com/docs/api/1.1/get/blocks/blocking/ids
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -289,12 +289,12 @@ module Twitter
     # @example Return an array of numeric user ids the authenticating user is blocking
     #   Twitter.blocking_ids
     def blocked_ids(options={})
-      get("/1/blocks/blocking/ids.json", options)
+      get("/1.1/blocks/blocking/ids.json", options)
     end
 
     # Returns true if the authenticating user is blocking a target user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/blocks/exists
+    # @see https://dev.twitter.com/docs/api/1.1/get/blocks/exists
     # @requires_authentication Yes
     # @rate_limited Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -306,7 +306,7 @@ module Twitter
     #   Twitter.block?(7505382)  # Same as above
     def block?(user, options={})
       options.merge_user!(user)
-      get("/1/blocks/exists.json", options, :raw => true)
+      get("/1.1/blocks/exists.json", options, :raw => true)
       true
     rescue Twitter::Error::NotFound
       false
@@ -314,7 +314,7 @@ module Twitter
 
     # Blocks the user specified by the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/blocks/create
+    # @see https://dev.twitter.com/docs/api/1.1/post/blocks/create
     # @note Destroys a friendship to the blocked user if it exists.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -327,13 +327,13 @@ module Twitter
     #   Twitter.block(7505382)  # Same as above
     def block(user, options={})
       options.merge_user!(user)
-      user = post("/1/blocks/create.json", options)
+      user = post("/1.1/blocks/create.json", options)
       Twitter::User.new(user)
     end
 
     # Un-blocks the user specified by the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/blocks/destroy
+    # @see https://dev.twitter.com/docs/api/1.1/post/blocks/destroy
     # @rate_limited No
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -345,13 +345,13 @@ module Twitter
     #   Twitter.unblock(7505382)  # Same as above
     def unblock(user, options={})
       options.merge_user!(user)
-      user = delete("/1/blocks/destroy.json", options)
+      user = delete("/1.1/blocks/destroy.json", options)
       Twitter::User.new(user)
     end
 
     # Returns the 20 most recent direct messages sent to the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/direct_messages
+    # @see https://dev.twitter.com/docs/api/1.1/get/direct_messages
     # @note This method requires an access token with RWD (read, write & direct message) permissions. Consult The Application Permission Model for more information.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -365,14 +365,14 @@ module Twitter
     # @example Return the 20 most recent direct messages sent to the authenticating user
     #   Twitter.direct_messages
     def direct_messages(options={})
-      get("/1/direct_messages.json", options).map do |direct_message|
+      get("/1.1/direct_messages.json", options).map do |direct_message|
         Twitter::DirectMessage.new(direct_message)
       end
     end
 
     # Returns the 20 most recent direct messages sent by the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/direct_messages/sent
+    # @see https://dev.twitter.com/docs/api/1.1/get/direct_messages/sent
     # @note This method requires an access token with RWD (read, write & direct message) permissions. Consult The Application Permission Model for more information.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -386,14 +386,14 @@ module Twitter
     # @example Return the 20 most recent direct messages sent by the authenticating user
     #   Twitter.direct_messages_sent
     def direct_messages_sent(options={})
-      get("/1/direct_messages/sent.json", options).map do |direct_message|
+      get("/1.1/direct_messages/sent.json", options).map do |direct_message|
         Twitter::DirectMessage.new(direct_message)
       end
     end
 
     # Destroys a direct message
     #
-    # @see https://dev.twitter.com/docs/api/1/post/direct_messages/destroy/:id
+    # @see https://dev.twitter.com/docs/api/1.1/post/direct_messages/destroy/:id
     # @note This method requires an access token with RWD (read, write & direct message) permissions. Consult The Application Permission Model for more information.
     # @rate_limited No
     # @requires_authentication Yes
@@ -404,13 +404,13 @@ module Twitter
     # @example Destroys the direct message with the ID 1825785544
     #   Twitter.direct_message_destroy(1825785544)
     def direct_message_destroy(id, options={})
-      direct_message = delete("/1/direct_messages/destroy/#{id}.json", options)
+      direct_message = delete("/1.1/direct_messages/destroy/#{id}.json", options)
       Twitter::DirectMessage.new(direct_message)
     end
 
     # Sends a new direct message to the specified user from the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/direct_messages/new
+    # @see https://dev.twitter.com/docs/api/1.1/post/direct_messages/new
     # @rate_limited No
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -423,14 +423,14 @@ module Twitter
     #   Twitter.direct_message_create(7505382, "I'm sending you this message via @gem!")  # Same as above
     def direct_message_create(user, text, options={})
       options.merge_user!(user)
-      direct_message = post("/1/direct_messages/new.json", options.merge(:text => text))
+      direct_message = post("/1.1/direct_messages/new.json", options.merge(:text => text))
       Twitter::DirectMessage.new(direct_message)
     end
     alias :d :direct_message_create
 
     # Returns a single direct message, specified by id.
     #
-    # @see https://dev.twitter.com/docs/api/1/get/direct_messages/show/%3Aid
+    # @see https://dev.twitter.com/docs/api/1.1/get/direct_messages/show/%3Aid
     # @note This method requires an access token with RWD (read, write & direct message) permissions. Consult The Application Permission Model for more information.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -441,11 +441,11 @@ module Twitter
     # @example Return the direct message with the id 1825786345
     #   Twitter.direct_message(1825786345)
     def direct_message(id, options={})
-      direct_message = get("/1/direct_messages/show/#{id}.json", options)
+      direct_message = get("/1.1/direct_messages/show/#{id}.json", options)
       Twitter::DirectMessage.new(direct_message)
     end
 
-    # @see https://dev.twitter.com/docs/api/1/get/favorites
+    # @see https://dev.twitter.com/docs/api/1.1/get/favorites
     # @rate_limited Yes
     # @requires_authentication No
     # @overload favorites(options={})
@@ -470,9 +470,9 @@ module Twitter
     def favorites(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
       if user = args.pop
-        get("/1/favorites/#{user}.json", options)
+        get("/1.1/favorites/#{user}.json", options)
       else
-        get("/1/favorites.json", options)
+        get("/1.1/favorites.json", options)
       end.map do |status|
         Twitter::Status.new(status)
       end
@@ -480,7 +480,7 @@ module Twitter
 
     # Favorites the specified status as the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/favorites/create/:id
+    # @see https://dev.twitter.com/docs/api/1.1/post/favorites/create/:id
     # @rate_limited No
     # @requires_authentication Yes
     # @param id [Integer] The numerical ID of the desired status.
@@ -490,14 +490,14 @@ module Twitter
     # @example Favorite the status with the ID 25938088801
     #   Twitter.favorite(25938088801)
     def favorite(id, options={})
-      status = post("/1/favorites/create/#{id}.json", options)
+      status = post("/1.1/favorites/create/#{id}.json", options)
       Twitter::Status.new(status)
     end
     alias :favorite_create :favorite
 
     # Un-favorites the specified status as the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/favorites/destroy/:id
+    # @see https://dev.twitter.com/docs/api/1.1/post/favorites/destroy/:id
     # @rate_limited No
     # @requires_authentication Yes
     # @param id [Integer] The numerical ID of the desired status.
@@ -507,12 +507,12 @@ module Twitter
     # @example Un-favorite the status with the ID 25938088801
     #   Twitter.unfavorite(25938088801)
     def unfavorite(id, options={})
-      status = delete("/1/favorites/destroy/#{id}.json", options)
+      status = delete("/1.1/favorites/destroy/#{id}.json", options)
       Twitter::Status.new(status)
     end
     alias :favorite_destroy :unfavorite
 
-    # @see https://dev.twitter.com/docs/api/1/get/followers/ids
+    # @see https://dev.twitter.com/docs/api/1.1/get/followers/ids
     # @rate_limited Yes
     # @requires_authentication No unless requesting it from a protected user
     #
@@ -540,11 +540,11 @@ module Twitter
       options.merge!(args.last.is_a?(Hash) ? args.pop : {})
       user = args.pop
       options.merge_user!(user)
-      cursor = get("/1/followers/ids.json", options)
+      cursor = get("/1.1/followers/ids.json", options)
       Twitter::Cursor.new(cursor, 'ids')
     end
 
-    # @see https://dev.twitter.com/docs/api/1/get/friends/ids
+    # @see https://dev.twitter.com/docs/api/1.1/get/friends/ids
     # @rate_limited Yes
     # @requires_authentication No unless requesting it from a protected user
     #
@@ -572,13 +572,13 @@ module Twitter
       options.merge!(args.last.is_a?(Hash) ? args.pop : {})
       user = args.pop
       options.merge_user!(user)
-      cursor = get("/1/friends/ids.json", options)
+      cursor = get("/1.1/friends/ids.json", options)
       Twitter::Cursor.new(cursor, 'ids')
     end
 
     # Test for the existence of friendship between two users
     #
-    # @see https://dev.twitter.com/docs/api/1/get/friendships/exists
+    # @see https://dev.twitter.com/docs/api/1.1/get/friendships/exists
     # @note Consider using {Twitter::Client::FriendsAndFollowers#friendship} instead of this method.
     # @rate_limited Yes
     # @requires_authentication No unless user_a or user_b is protected
@@ -593,12 +593,12 @@ module Twitter
     def friendship?(user_a, user_b, options={})
       options.merge_user!(user_a, nil, "a")
       options.merge_user!(user_b, nil, "b")
-      get("/1/friendships/exists.json", options)
+      get("/1.1/friendships/exists.json", options)
     end
 
     # Returns an array of numeric IDs for every user who has a pending request to follow the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/friendships/incoming
+    # @see https://dev.twitter.com/docs/api/1.1/get/friendships/incoming
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -609,13 +609,13 @@ module Twitter
     #   Twitter.friendships_incoming
     def friendships_incoming(options={})
       options = {:cursor => -1}.merge(options)
-      cursor = get("/1/friendships/incoming.json", options)
+      cursor = get("/1.1/friendships/incoming.json", options)
       Twitter::Cursor.new(cursor, 'ids')
     end
 
     # Returns an array of numeric IDs for every protected user for whom the authenticating user has a pending follow request
     #
-    # @see https://dev.twitter.com/docs/api/1/get/friendships/outgoing
+    # @see https://dev.twitter.com/docs/api/1.1/get/friendships/outgoing
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -626,13 +626,13 @@ module Twitter
     #   Twitter.friendships_outgoing
     def friendships_outgoing(options={})
       options = {:cursor => -1}.merge(options)
-      cursor = get("/1/friendships/outgoing.json", options)
+      cursor = get("/1.1/friendships/outgoing.json", options)
       Twitter::Cursor.new(cursor, 'ids')
     end
 
     # Returns detailed information about the relationship between two users
     #
-    # @see https://dev.twitter.com/docs/api/1/get/friendships/show
+    # @see https://dev.twitter.com/docs/api/1.1/get/friendships/show
     # @rate_limited Yes
     # @requires_authentication No
     # @param source [Integer, String, Twitter::User] The Twitter user ID, screen name, or object of the source user.
@@ -648,7 +648,7 @@ module Twitter
       options[:source_id] = options.delete(:source_user_id) unless options[:source_user_id].nil?
       options.merge_user!(target, "target")
       options[:target_id] = options.delete(:target_user_id) unless options[:target_user_id].nil?
-      relationship = get("/1/friendships/show.json", options)['relationship']
+      relationship = get("/1.1/friendships/show.json", options)['relationship']
       Twitter::Relationship.new(relationship)
     end
     alias :friendship_show :friendship
@@ -656,7 +656,7 @@ module Twitter
 
     # Allows the authenticating user to follow the specified user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/friendships/create
+    # @see https://dev.twitter.com/docs/api/1.1/post/friendships/create
     # @rate_limited No
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -671,14 +671,14 @@ module Twitter
       # Twitter always turns on notifications if the "follow" option is present, even if it's set to false
       # so only send follow if it's true
       options.merge!(:follow => true) if options.delete(:follow)
-      user = post("/1/friendships/create.json", options)
+      user = post("/1.1/friendships/create.json", options)
       Twitter::User.new(user)
     end
     alias :friendship_create :follow
 
     # Allows the authenticating user to unfollow the specified user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/friendships/destroy
+    # @see https://dev.twitter.com/docs/api/1.1/post/friendships/destroy
     # @rate_limited No
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -689,14 +689,14 @@ module Twitter
     #   Twitter.unfollow('sferik')
     def unfollow(user, options={})
       options.merge_user!(user)
-      user = delete("/1/friendships/destroy.json", options)
+      user = delete("/1.1/friendships/destroy.json", options)
       Twitter::User.new(user)
     end
     alias :friendship_destroy :unfollow
 
     # Returns the relationship of the authenticating user to the comma separated list of up to 100 screen_names or user_ids provided. Values for connections can be: following, following_requested, followed_by, none.
     #
-    # @see https://dev.twitter.com/docs/api/1/get/friendships/lookup
+    # @see https://dev.twitter.com/docs/api/1.1/get/friendships/lookup
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -714,14 +714,14 @@ module Twitter
       options = args.last.is_a?(Hash) ? args.pop : {}
       users = args
       options.merge_users!(Array(users))
-      get("/1/friendships/lookup.json", options).map do |user|
+      get("/1.1/friendships/lookup.json", options).map do |user|
         Twitter::User.new(user)
       end
     end
 
     # Allows one to enable or disable retweets and device notifications from the specified user.
     #
-    # @see https://dev.twitter.com/docs/api/1/post/friendships/update
+    # @see https://dev.twitter.com/docs/api/1.1/post/friendships/update
     # @rate_limited No
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -734,13 +734,13 @@ module Twitter
     #   Twitter.friendship_update('sferik', :device => true, :retweets => true)
     def friendship_update(user, options={})
       options.merge_user!(user)
-      relationship = post("/1/friendships/update.json", options)['relationship']
+      relationship = post("/1.1/friendships/update.json", options)['relationship']
       Twitter::Relationship.new(relationship)
     end
 
     # Returns an array of user_ids that the currently authenticated user does not want to see retweets from.
     #
-    # @see https://dev.twitter.com/docs/api/1/get/friendships/no_retweet_ids
+    # @see https://dev.twitter.com/docs/api/1.1/get/friendships/no_retweet_ids
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -751,7 +751,7 @@ module Twitter
     # @example Enable rewteets and devise notifications for @sferik
     #   Twitter.no_retweet_ids
     def no_retweet_ids(options={})
-      get("/1/friendships/no_retweet_ids.json", options)
+      get("/1.1/friendships/no_retweet_ids.json", options)
     end
 
     # Allows the authenticating user to accept the specified user's follow request
@@ -767,7 +767,7 @@ module Twitter
     #   Twitter.accept('sferik')
     def accept(user, options={})
       options.merge_user!(user)
-      user = post("/1/friendships/accept.json", options)
+      user = post("/1.1/friendships/accept.json", options)
       Twitter::User.new(user)
     end
 
@@ -784,64 +784,64 @@ module Twitter
     #   Twitter.deny('sferik')
     def deny(user, options={})
       options.merge_user!(user)
-      user = post("/1/friendships/deny.json", options)
+      user = post("/1.1/friendships/deny.json", options)
       Twitter::User.new(user)
     end
 
     # Returns the current configuration used by Twitter
     #
-    # @see https://dev.twitter.com/docs/api/1/get/help/configuration
+    # @see https://dev.twitter.com/docs/api/1.1/get/help/configuration
     # @rate_limited Yes
     # @requires_authentication No
     # @return [Twitter::Configuration] Twitter's configuration.
     # @example Return the current configuration used by Twitter
     #   Twitter.configuration
     def configuration(options={})
-      configuration = get("/1/help/configuration.json", options)
+      configuration = get("/1.1/help/configuration.json", options)
       Twitter::Configuration.new(configuration)
     end
 
     # Returns the list of languages supported by Twitter
     #
-    # @see https://dev.twitter.com/docs/api/1/get/help/languages
+    # @see https://dev.twitter.com/docs/api/1.1/get/help/languages
     # @rate_limited Yes
     # @requires_authentication No
     # @return [Array<Twitter::Language>]
     # @example Return the list of languages Twitter supports
     #   Twitter.languages
     def languages(options={})
-      get("/1/help/languages.json", options).map do |language|
+      get("/1.1/help/languages.json", options).map do |language|
         Twitter::Language.new(language)
       end
     end
 
     # Returns {https://twitter.com/privacy Twitter's Privacy Policy}
     #
-    # @see https://dev.twitter.com/docs/api/1/get/legal/privacy
+    # @see https://dev.twitter.com/docs/api/1.1/get/legal/privacy
     # @rate_limited Yes
     # @requires_authentication No
     # @return [String]
     # @example Return {https://twitter.com/privacy Twitter's Privacy Policy}
     #   Twitter.privacy
     def privacy(options={})
-      get("/1/legal/privacy.json", options)['privacy']
+      get("/1.1/legal/privacy.json", options)['privacy']
     end
 
     # Returns {https://twitter.com/tos Twitter's Terms of Service}
     #
-    # @see https://dev.twitter.com/docs/api/1/get/legal/tos
+    # @see https://dev.twitter.com/docs/api/1.1/get/legal/tos
     # @rate_limited Yes
     # @requires_authentication No
     # @return [String]
     # @example Return {https://twitter.com/tos Twitter's Terms of Service}
     #   Twitter.tos
     def tos(options={})
-      get("/1/legal/tos.json", options)['tos']
+      get("/1.1/legal/tos.json", options)['tos']
     end
 
     # Returns all lists the authenticating or specified user subscribes to, including their own
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/all
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/all
     # @rate_limited Yes
     # @requires_authentication Supported
     # @overload lists_subscribed_to(options={})
@@ -861,14 +861,14 @@ module Twitter
       if user = args.pop
         options.merge_user!(user)
       end
-      get("/1/lists/all.json", options).map do |list|
+      get("/1.1/lists/all.json", options).map do |list|
         Twitter::List.new(list)
       end
     end
 
     # Show tweet timeline for members of the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/statuses
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/statuses
     # @rate_limited Yes
     # @requires_authentication No
     # @overload list_timeline(list, options={})
@@ -902,14 +902,14 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      get("/1/lists/statuses.json", options).map do |status|
+      get("/1.1/lists/statuses.json", options).map do |status|
         Twitter::Status.new(status)
       end
     end
 
     # Removes the specified member from the list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/members/destroy
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/members/destroy
     # @rate_limited No
     # @requires_authentication Yes
     # @overload list_remove_member(list, user_to_remove, options={})
@@ -944,13 +944,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = post("/1/lists/members/destroy.json", options)
+      list = post("/1.1/lists/members/destroy.json", options)
       Twitter::List.new(list)
     end
 
     # List the lists the specified user has been added to
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/memberships
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/memberships
     # @rate_limited Yes
     # @requires_authentication Supported
     # @overload memberships(options={})
@@ -974,13 +974,13 @@ module Twitter
       if user = args.pop
         options.merge_user!(user)
       end
-      cursor = get("/1/lists/memberships.json", options)
+      cursor = get("/1.1/lists/memberships.json", options)
       Twitter::Cursor.new(cursor, 'lists', Twitter::List)
     end
 
     # Returns the subscribers of the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/subscribers
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/subscribers
     # @rate_limited Yes
     # @requires_authentication Supported
     # @overload list_subscribers(list, options={})
@@ -1011,13 +1011,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      cursor = get("/1/lists/subscribers.json", options)
+      cursor = get("/1.1/lists/subscribers.json", options)
       Twitter::Cursor.new(cursor, 'users', Twitter::User)
     end
 
     # List the lists the specified user follows
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/subscriptions
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/subscriptions
     # @rate_limited Yes
     # @requires_authentication Supported
     # @overload subscriptions(options={})
@@ -1041,13 +1041,13 @@ module Twitter
       if user = args.pop
         options.merge_user!(user)
       end
-      cursor = get("/1/lists/subscriptions.json", options)
+      cursor = get("/1.1/lists/subscriptions.json", options)
       Twitter::Cursor.new(cursor, 'lists', Twitter::List)
     end
 
     # Make the authenticated user follow the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/subscribers/create
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/subscribers/create
     # @rate_limited No
     # @requires_authentication Yes
     # @overload list_subscribe(list, options={})
@@ -1076,13 +1076,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = post("/1/lists/subscribers/create.json", options)
+      list = post("/1.1/lists/subscribers/create.json", options)
       Twitter::List.new(list)
     end
 
     # Check if a user is a subscriber of the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/subscribers/show
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/subscribers/show
     # @rate_limited Yes
     # @requires_authentication Yes
     # @overload list_subscriber?(list, user_to_check, options={})
@@ -1118,7 +1118,7 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      get("/1/lists/subscribers/show.json", options, :raw => true)
+      get("/1.1/lists/subscribers/show.json", options, :raw => true)
       true
     rescue Twitter::Error::NotFound, Twitter::Error::Forbidden
       false
@@ -1126,7 +1126,7 @@ module Twitter
 
     # Unsubscribes the authenticated user form the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/subscribers/destroy
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/subscribers/destroy
     # @rate_limited No
     # @requires_authentication Yes
     # @overload list_unsubscribe(list, options={})
@@ -1155,13 +1155,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = post("/1/lists/subscribers/destroy.json", options)
+      list = post("/1.1/lists/subscribers/destroy.json", options)
       Twitter::List.new(list)
     end
 
     # Adds specified members to a list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/members/create_all
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/members/create_all
     # @note Lists are limited to having 500 members, and you are limited to adding up to 100 members to a list at a time with this method.
     # @rate_limited No
     # @requires_authentication Yes
@@ -1200,13 +1200,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = post("/1/lists/members/create_all.json", options)
+      list = post("/1.1/lists/members/create_all.json", options)
       Twitter::List.new(list)
     end
 
     # Removes specified members from the list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/members/destroy_all
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/members/destroy_all
     # @rate_limited No
     # @requires_authentication Yes
     # @overload list_remove_members(list, users, options={})
@@ -1244,13 +1244,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = post("/1/lists/members/destroy_all.json", options)
+      list = post("/1.1/lists/members/destroy_all.json", options)
       Twitter::List.new(list)
     end
 
     # Check if a user is a member of the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/members/show
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/members/show
     # @requires_authentication Yes
     # @rate_limited Yes
     # @overload list_member?(list, user_to_check, options={})
@@ -1283,7 +1283,7 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      get("/1/lists/members/show.json", options, :raw => true)
+      get("/1.1/lists/members/show.json", options, :raw => true)
       true
     rescue Twitter::Error::NotFound, Twitter::Error::Forbidden
       false
@@ -1291,7 +1291,7 @@ module Twitter
 
     # Returns the members of the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/members
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/members
     # @rate_limited Yes
     # @requires_authentication Yes
     # @overload list_members(list, options={})
@@ -1323,13 +1323,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      cursor = get("/1/lists/members.json", options)
+      cursor = get("/1.1/lists/members.json", options)
       Twitter::Cursor.new(cursor, 'users', Twitter::User)
     end
 
     # Add a member to a list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/members/create
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/members/create
     # @note Lists are limited to having 500 members.
     # @rate_limited No
     # @requires_authentication Yes
@@ -1364,13 +1364,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = post("/1/lists/members/create.json", options)
+      list = post("/1.1/lists/members/create.json", options)
       Twitter::List.new(list)
     end
 
     # Deletes the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/destroy
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/destroy
     # @note Must be owned by the authenticated user.
     # @rate_limited No
     # @requires_authentication Yes
@@ -1401,13 +1401,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = delete("/1/lists/destroy.json", options)
+      list = delete("/1.1/lists/destroy.json", options)
       Twitter::List.new(list)
     end
 
     # Updates the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/update
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/update
     # @rate_limited No
     # @requires_authentication Yes
     # @overload list_update(list, options={})
@@ -1441,13 +1441,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = post("/1/lists/update.json", options)
+      list = post("/1.1/lists/update.json", options)
       Twitter::List.new(list)
     end
 
     # Creates a new list for the authenticated user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/lists/create
+    # @see https://dev.twitter.com/docs/api/1.1/post/lists/create
     # @note Accounts are limited to 20 lists.
     # @rate_limited No
     # @requires_authentication Yes
@@ -1460,13 +1460,13 @@ module Twitter
     # @example Create a list named 'presidents'
     #   Twitter.list_create('presidents')
     def list_create(name, options={})
-      list = post("/1/lists/create.json", options.merge(:name => name))
+      list = post("/1.1/lists/create.json", options.merge(:name => name))
       Twitter::List.new(list)
     end
 
     # List the lists of the specified user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists
     # @note Private lists will be included if the authenticated user is the same as the user whose lists are being returned.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -1490,13 +1490,13 @@ module Twitter
       options = {:cursor => -1}.merge(args.last.is_a?(Hash) ? args.pop : {})
       user = args.pop
       options.merge_user!(user) if user
-      cursor = get("/1/lists.json", options)
+      cursor = get("/1.1/lists.json", options)
       Twitter::Cursor.new(cursor, 'lists', Twitter::List)
     end
 
     # Show the specified list
     #
-    # @see https://dev.twitter.com/docs/api/1/get/lists/show
+    # @see https://dev.twitter.com/docs/api/1.1/get/lists/show
     # @note Private lists will only be shown if the authenticated user owns the specified list.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -1527,13 +1527,13 @@ module Twitter
         owner = args.pop || self.current_user.screen_name
         options.merge_owner!(owner)
       end
-      list = get("/1/lists/show.json", options)
+      list = get("/1.1/lists/show.json", options)
       Twitter::List.new(list)
     end
 
     # Returns the top 10 trending topics for a specific WOEID
     #
-    # @see https://dev.twitter.com/docs/api/1/get/trends/:woeid
+    # @see https://dev.twitter.com/docs/api/1.1/get/trends/:woeid
     # @rate_limited Yes
     # @requires_authentication No
     # @param woeid [Integer] The {https://developer.yahoo.com/geo/geoplanet Yahoo! Where On Earth ID} of the location to return trending information for. WOEIDs can be retrieved by calling {Twitter::Client::LocalTrends#trend_locations}. Global information is available by using 1 as the WOEID.
@@ -1543,7 +1543,7 @@ module Twitter
     # @example Return the top 10 trending topics for San Francisco
     #   Twitter.local_trends(2487956)
     def local_trends(woeid=1, options={})
-      get("/1/trends/#{woeid}.json", options).first['trends'].map do |trend|
+      get("/1.1/trends/#{woeid}.json", options).first['trends'].map do |trend|
         Twitter::Trend.new(trend)
       end
     end
@@ -1551,7 +1551,7 @@ module Twitter
 
     # Returns the locations that Twitter has trending topic information for
     #
-    # @see https://dev.twitter.com/docs/api/1/get/trends/available
+    # @see https://dev.twitter.com/docs/api/1.1/get/trends/available
     # @rate_limited Yes
     # @requires_authentication No
     # @param options [Hash] A customizable set of options.
@@ -1561,14 +1561,14 @@ module Twitter
     # @example Return the locations that Twitter has trending topic information for
     #   Twitter.trend_locations
     def trend_locations(options={})
-      get("/1/trends/available.json", options).map do |place|
+      get("/1.1/trends/available.json", options).map do |place|
         Twitter::Place.new(place)
       end
     end
 
     # Enables device notifications for updates from the specified user to the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/notifications/follow
+    # @see https://dev.twitter.com/docs/api/1.1/post/notifications/follow
     # @rate_limited No
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -1580,13 +1580,13 @@ module Twitter
     #   Twitter.enable_notifications(7505382)  # Same as above
     def enable_notifications(user, options={})
       options.merge_user!(user)
-      user = post("/1/notifications/follow.json", options)
+      user = post("/1.1/notifications/follow.json", options)
       Twitter::User.new(user)
     end
 
     # Disables notifications for updates from the specified user to the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/notifications/leave
+    # @see https://dev.twitter.com/docs/api/1.1/post/notifications/leave
     # @rate_limited No
     # @requires_authentication Yes
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -1598,13 +1598,13 @@ module Twitter
     #   Twitter.disable_notifications(7505382)  # Same as above
     def disable_notifications(user, options={})
       options.merge_user!(user)
-      user = post("/1/notifications/leave.json", options)
+      user = post("/1.1/notifications/leave.json", options)
       Twitter::User.new(user)
     end
 
     # Search for places that can be attached to a {Twitter::Client::Tweets#update}
     #
-    # @see https://dev.twitter.com/docs/api/1/get/geo/search
+    # @see https://dev.twitter.com/docs/api/1.1/get/geo/search
     # @rate_limited Yes
     # @requires_authentication No
     # @param options [Hash] A customizable set of options.
@@ -1621,7 +1621,7 @@ module Twitter
     # @example Return an array of places near the IP address 74.125.19.104
     #   Twitter.places_nearby(:ip => "74.125.19.104")
     def places_nearby(options={})
-      get("/1/geo/search.json", options)['result']['places'].map do |place|
+      get("/1.1/geo/search.json", options)['result']['places'].map do |place|
         Twitter::Place.new(place)
       end
     end
@@ -1629,7 +1629,7 @@ module Twitter
 
     # Locates places near the given coordinates which are similar in name
     #
-    # @see https://dev.twitter.com/docs/api/1/get/geo/similar_places
+    # @see https://dev.twitter.com/docs/api/1.1/get/geo/similar_places
     # @note Conceptually, you would use this method to get a list of known places to choose from first. Then, if the desired place doesn't exist, make a request to {Twitter::Client::Geo#place} to create a new one. The token contained in the response is the token necessary to create a new place.
     # @rate_limited Yes
     # @requires_authentication No
@@ -1643,14 +1643,14 @@ module Twitter
     # @example Return an array of places similar to Twitter HQ
     #   Twitter.places_similar(:lat => "37.7821120598956", :long => "-122.400612831116", :name => "Twitter HQ")
     def places_similar(options={})
-      get("/1/geo/similar_places.json", options)['result']['places'].map do |place|
+      get("/1.1/geo/similar_places.json", options)['result']['places'].map do |place|
         Twitter::Place.new(place)
       end
     end
 
     # Searches for up to 20 places that can be used as a place_id
     #
-    # @see https://dev.twitter.com/docs/api/1/get/geo/reverse_geocode
+    # @see https://dev.twitter.com/docs/api/1.1/get/geo/reverse_geocode
     # @note This request is an informative call and will deliver generalized results about geography.
     # @rate_limited Yes
     # @requires_authentication No
@@ -1664,14 +1664,14 @@ module Twitter
     # @example Return an array of places within the specified region
     #   Twitter.reverse_geocode(:lat => "37.7821120598956", :long => "-122.400612831116")
     def reverse_geocode(options={})
-      get("/1/geo/reverse_geocode.json", options)['result']['places'].map do |place|
+      get("/1.1/geo/reverse_geocode.json", options)['result']['places'].map do |place|
         Twitter::Place.new(place)
       end
     end
 
     # Returns all the information about a known place
     #
-    # @see https://dev.twitter.com/docs/api/1/get/geo/id/:place_id
+    # @see https://dev.twitter.com/docs/api/1.1/get/geo/id/:place_id
     # @rate_limited Yes
     # @requires_authentication No
     # @param place_id [String] A place in the world. These IDs can be retrieved from {Twitter::Client::Geo#reverse_geocode}.
@@ -1680,13 +1680,13 @@ module Twitter
     # @example Return all the information about Twitter HQ
     #   Twitter.place("247f43d441defc03")
     def place(place_id, options={})
-      place = get("/1/geo/id/#{place_id}.json", options)
+      place = get("/1.1/geo/id/#{place_id}.json", options)
       Twitter::Place.new(place)
     end
 
     # Creates a new place at the given latitude and longitude
     #
-    # @see https://dev.twitter.com/docs/api/1/post/geo/place
+    # @see https://dev.twitter.com/docs/api/1.1/post/geo/place
     # @rate_limited Yes
     # @requires_authentication No
     # @param options [Hash] A customizable set of options.
@@ -1700,13 +1700,13 @@ module Twitter
     # @example Create a new place
     #   Twitter.place_create(:name => "@sferik's Apartment", :token => "22ff5b1f7159032cf69218c4d8bb78bc", :contained_within => "41bcb736f84a799e", :lat => "37.783699", :long => "-122.393581")
     def place_create(options={})
-      place = post("/1/geo/place.json", options)
+      place = post("/1.1/geo/place.json", options)
       Twitter::Place.new(place)
     end
 
     # Returns the authenticated user's saved search queries
     #
-    # @see https://dev.twitter.com/docs/api/1/get/saved_searches
+    # @see https://dev.twitter.com/docs/api/1.1/get/saved_searches
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -1715,14 +1715,14 @@ module Twitter
     # @example Return the authenticated user's saved search queries
     #   Twitter.saved_searches
     def saved_searches(options={})
-      get("/1/saved_searches.json", options).map do |saved_search|
+      get("/1.1/saved_searches.json", options).map do |saved_search|
         Twitter::SavedSearch.new(saved_search)
       end
     end
 
     # Retrieve the data for a saved search owned by the authenticating user specified by the given ID
     #
-    # @see https://dev.twitter.com/docs/api/1/get/saved_searches/show/:id
+    # @see https://dev.twitter.com/docs/api/1.1/get/saved_searches/show/:id
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param id [Integer] The ID of the saved search.
@@ -1732,13 +1732,13 @@ module Twitter
     # @example Retrieve the data for a saved search owned by the authenticating user with the ID 16129012
     #   Twitter.saved_search(16129012)
     def saved_search(id, options={})
-      saved_search = get("/1/saved_searches/show/#{id}.json", options)
+      saved_search = get("/1.1/saved_searches/show/#{id}.json", options)
       Twitter::SavedSearch.new(saved_search)
     end
 
     # Creates a saved search for the authenticated user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/saved_searches/create
+    # @see https://dev.twitter.com/docs/api/1.1/post/saved_searches/create
     # @rate_limited No
     # @requires_authentication Yes
     # @param query [String] The query of the search the user would like to save.
@@ -1747,13 +1747,13 @@ module Twitter
     # @example Create a saved search for the authenticated user with the query "twitter"
     #   Twitter.saved_search_create("twitter")
     def saved_search_create(query, options={})
-      saved_search = post("/1/saved_searches/create.json", options.merge(:query => query))
+      saved_search = post("/1.1/saved_searches/create.json", options.merge(:query => query))
       Twitter::SavedSearch.new(saved_search)
     end
 
     # Destroys a saved search for the authenticated user
     #
-    # @see https://dev.twitter.com/docs/api/1/post/saved_searches/destroy/:id
+    # @see https://dev.twitter.com/docs/api/1.1/post/saved_searches/destroy/:id
     # @note The search specified by ID must be owned by the authenticating user.
     # @rate_limited No
     # @requires_authentication Yes
@@ -1763,13 +1763,13 @@ module Twitter
     # @example Destroys a saved search for the authenticated user with the ID 16129012
     #   Twitter.saved_search_destroy(16129012)
     def saved_search_destroy(id, options={})
-      saved_search = delete("/1/saved_searches/destroy/#{id}.json", options)
+      saved_search = delete("/1.1/saved_searches/destroy/#{id}.json", options)
       Twitter::SavedSearch.new(saved_search)
     end
 
     # Returns tweets that match a specified query.
     #
-    # @see https://dev.twitter.com/docs/api/1/get/search
+    # @see https://dev.twitter.com/docs/api/1.1/get/search
     # @see https://dev.twitter.com/docs/using-search
     # @see https://dev.twitter.com/docs/history-rest-search-api
     # @note As of April 1st 2010, the Search API provides an option to retrieve "popular tweets" in addition to real-time search results. In an upcoming release, this will become the default and clients that don't want to receive popular tweets in their search results will have to explicitly opt-out. See the result_type parameter below for more information.
@@ -1820,7 +1820,7 @@ module Twitter
 
     # The user specified is blocked by the authenticated user and reported as a spammer
     #
-    # @see https://dev.twitter.com/docs/api/1/post/report_spam
+    # @see https://dev.twitter.com/docs/api/1.1/post/report_spam
     # @rate_limited Yes
     # @requires_authentication No
     # @param user [Integer, String, Twitter::User] A Twitter user ID, screen name, or object.
@@ -1831,14 +1831,14 @@ module Twitter
     #   Twitter.report_spam(14589771) # Same as above
     def report_spam(user, options={})
       options.merge_user!(user)
-      user = post("/1/report_spam.json", options)
+      user = post("/1.1/report_spam.json", options)
       Twitter::User.new(user)
     end
 
     # @overload suggestions(options={})
     #   Returns the list of suggested user categories
     #
-    #   @see https://dev.twitter.com/docs/api/1/get/users/suggestions
+    #   @see https://dev.twitter.com/docs/api/1.1/get/users/suggestions
     #   @rate_limited Yes
     #   @requires_authentication No
     #   @param options [Hash] A customizable set of options.
@@ -1848,7 +1848,7 @@ module Twitter
     # @overload suggestions(slug, options={})
     #   Returns the users in a given category
     #
-    #   @see https://dev.twitter.com/docs/api/1/get/users/suggestions/:slug
+    #   @see https://dev.twitter.com/docs/api/1.1/get/users/suggestions/:slug
     #   @rate_limited Yes
     #   @requires_authentication No
     #   @param slug [String] The short name of list or a category.
@@ -1859,10 +1859,10 @@ module Twitter
     def suggestions(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
       if slug = args.pop
-        suggestion = get("/1/users/suggestions/#{slug}.json", options)
+        suggestion = get("/1.1/users/suggestions/#{slug}.json", options)
         Twitter::Suggestion.new(suggestion)
       else
-        get("/1/users/suggestions.json", options).map do |suggestion|
+        get("/1.1/users/suggestions.json", options).map do |suggestion|
           Twitter::Suggestion.new(suggestion)
         end
       end
@@ -1870,7 +1870,7 @@ module Twitter
 
     # Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/users/suggestions/:slug/members
+    # @see https://dev.twitter.com/docs/api/1.1/get/users/suggestions/:slug/members
     # @rate_limited Yes
     # @requires_authentication No
     # @param slug [String] The short name of list or a category.
@@ -1879,14 +1879,14 @@ module Twitter
     # @example Return the users in the Art & Design category and their most recent status if they are not a protected user
     #   Twitter.suggest_users("art-design")
     def suggest_users(slug, options={})
-      get("/1/users/suggestions/#{slug}/members.json", options).map do |user|
+      get("/1.1/users/suggestions/#{slug}/members.json", options).map do |user|
         Twitter::User.new(user)
       end
     end
 
     # Returns the 20 most recent statuses, including retweets if they exist, posted by the authenticating user and the users they follow
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/home_timeline
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/home_timeline
     # @note This method can only return up to 800 statuses, including retweets.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -1901,14 +1901,14 @@ module Twitter
     # @example Return the 20 most recent statuses, including retweets if they exist, posted by the authenticating user and the users they follow
     #   Twitter.home_timeline
     def home_timeline(options={})
-      get("/1/statuses/home_timeline.json", options).map do |status|
+      get("/1.1/statuses/home_timeline.json", options).map do |status|
         Twitter::Status.new(status)
       end
     end
 
     # Returns the 20 most recent mentions (statuses containing @username) for the authenticating user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/mentions
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/mentions
     # @note This method can only return up to 800 statuses.
     # @rate_limited Yes
     # @requires_authentication Yes
@@ -1922,15 +1922,15 @@ module Twitter
     # @example Return the 20 most recent mentions (statuses containing @username) for the authenticating user
     #   Twitter.mentions
     def mentions(options={})
-      get("/1/statuses/mentions.json", options).map do |status|
+      get("/1.1/statuses/mentions.json", options).map do |status|
         Twitter::Status.new(status)
       end
     end
 
     # Returns the 20 most recent retweets posted by the specified user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/retweeted_by_me
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/retweeted_by_user
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/retweeted_by_me
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/retweeted_by_user
     # @rate_limited Yes
     # @requires_authentication Supported
     # @overload retweeted_by(options={})
@@ -1958,9 +1958,9 @@ module Twitter
       options = args.last.is_a?(Hash) ? args.pop : {}
       if user = args.pop
         options.merge_user!(user)
-        get("/1/statuses/retweeted_by_user.json", options)
+        get("/1.1/statuses/retweeted_by_user.json", options)
       else
-        get("/1/statuses/retweeted_by_me.json", options)
+        get("/1.1/statuses/retweeted_by_me.json", options)
       end.map do |status|
         Twitter::Status.new(status)
       end
@@ -1968,8 +1968,8 @@ module Twitter
 
     # Returns the 20 most recent retweets posted by users the specified user follows
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/retweeted_to_me
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/retweeted_to_user
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/retweeted_to_me
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/retweeted_to_user
     # @rate_limited Yes
     # @requires_authentication Supported
     # @overload retweeted_to(options={})
@@ -1997,9 +1997,9 @@ module Twitter
       options = args.last.is_a?(Hash) ? args.pop : {}
       if user = args.pop
         options.merge_user!(user)
-        get("/1/statuses/retweeted_to_user.json", options)
+        get("/1.1/statuses/retweeted_to_user.json", options)
       else
-        get("/1/statuses/retweeted_to_me.json", options)
+        get("/1.1/statuses/retweeted_to_me.json", options)
       end.map do |status|
         Twitter::Status.new(status)
       end
@@ -2007,7 +2007,7 @@ module Twitter
 
     # Returns the 20 most recent tweets of the authenticated user that have been retweeted by others
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/retweets_of_me
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/retweets_of_me
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param options [Hash] A customizable set of options.
@@ -2020,14 +2020,14 @@ module Twitter
     # @example Return the 20 most recent tweets of the authenticated user that have been retweeted by others
     #   Twitter.retweets_of_me
     def retweets_of_me(options={})
-      get("/1/statuses/retweets_of_me.json", options).map do |status|
+      get("/1.1/statuses/retweets_of_me.json", options).map do |status|
         Twitter::Status.new(status)
       end
     end
 
     # Returns the 20 most recent statuses posted by the specified user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/user_timeline
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/user_timeline
     # @note This method can only return up to 3200 statuses.
     # @rate_limited Yes
     # @requires_authentication No, unless the user whose timeline you're trying to view is protected
@@ -2047,7 +2047,7 @@ module Twitter
       if user = args.pop
         options.merge_user!(user)
       end
-      get("/1/statuses/user_timeline.json", options).map do |status|
+      get("/1.1/statuses/user_timeline.json", options).map do |status|
         Twitter::Status.new(status)
       end
     end
@@ -2072,7 +2072,7 @@ module Twitter
       if user = args.pop
         options.merge_user!(user)
       end
-      get("/1/statuses/media_timeline.json", options).map do |status|
+      get("/1.1/statuses/media_timeline.json", options).map do |status|
         Twitter::Status.new(status)
       end
     end
@@ -2100,7 +2100,7 @@ module Twitter
 
     # Returns the top 20 trending topics for each hour in a given day
     #
-    # @see https://dev.twitter.com/docs/api/1/get/trends/daily
+    # @see https://dev.twitter.com/docs/api/1.1/get/trends/daily
     # @rate_limited Yes
     # @requires_authentication No
     # @param date [Date] The start date for the report. A 404 error will be thrown if the date is older than the available search index (7-10 days). Dates in the future will be forced to the current date.
@@ -2111,7 +2111,7 @@ module Twitter
     #   Twitter.trends_daily(Date.parse("2010-10-24"))
     def trends_daily(date=Date.today, options={})
       trends = {}
-      get("/1/trends/daily.json", options.merge(:date => date.strftime('%Y-%m-%d')))['trends'].each do |key, value|
+      get("/1.1/trends/daily.json", options.merge(:date => date.strftime('%Y-%m-%d')))['trends'].each do |key, value|
         trends[key] = []
         value.each do |trend|
           trends[key] << Twitter::Trend.new(trend)
@@ -2122,7 +2122,7 @@ module Twitter
 
     # Returns the top 30 trending topics for each day in a given week
     #
-    # @see https://dev.twitter.com/docs/api/1/get/trends/weekly
+    # @see https://dev.twitter.com/docs/api/1.1/get/trends/weekly
     # @rate_limited Yes
     # @requires_authentication No
     # @param date [Date] The start date for the report. A 404 error will be thrown if the date is older than the available search index (7-10 days). Dates in the future will be forced to the current date.
@@ -2133,7 +2133,7 @@ module Twitter
     #   Twitter.trends_weekly(Date.parse("2010-10-24"))
     def trends_weekly(date=Date.today, options={})
       trends = {}
-      get("/1/trends/weekly.json", options.merge(:date => date.strftime('%Y-%m-%d')))['trends'].each do |key, value|
+      get("/1.1/trends/weekly.json", options.merge(:date => date.strftime('%Y-%m-%d')))['trends'].each do |key, value|
         trends[key] = []
         value.each do |trend|
           trends[key] << Twitter::Trend.new(trend)
@@ -2144,8 +2144,8 @@ module Twitter
 
     # Show up to 100 users who retweeted the status
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/:id/retweeted_by
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/:id/retweeted_by/ids
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/:id/retweeted_by
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/:id/retweeted_by/ids
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param id [Integer] The numerical ID of the desired status.
@@ -2160,9 +2160,9 @@ module Twitter
     #   Twitter.retweeters_of(28561922516)
     def retweeters_of(id, options={})
       if ids_only = !!options.delete(:ids_only)
-        get("/1/statuses/#{id}/retweeted_by/ids.json", options)
+        get("/1.1/statuses/#{id}/retweeted_by/ids.json", options)
       else
-        get("/1/statuses/#{id}/retweeted_by.json", options).map do |user|
+        get("/1.1/statuses/#{id}/retweeted_by.json", options).map do |user|
           Twitter::User.new(user)
         end
       end
@@ -2170,7 +2170,7 @@ module Twitter
 
     # Returns up to 100 of the first retweets of a given tweet
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/retweets/:id
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/retweets/:id
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param id [Integer] The numerical ID of the desired status.
@@ -2182,14 +2182,14 @@ module Twitter
     # @example Return up to 100 of the first retweets of the status with the ID 28561922516
     #   Twitter.retweets(28561922516)
     def retweets(id, options={})
-      get("/1/statuses/retweets/#{id}.json", options).map do |status|
+      get("/1.1/statuses/retweets/#{id}.json", options).map do |status|
         Twitter::Status.new(status)
       end
     end
 
     # Returns a single status, specified by ID
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/show/:id
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/show/:id
     # @rate_limited Yes
     # @requires_authentication No, unless the author of the status is protected
     # @param id [Integer] The numerical ID of the desired status.
@@ -2199,7 +2199,7 @@ module Twitter
     # @example Return the status with the ID 25938088801
     #   Twitter.status(25938088801)
     def status(id, options={})
-      status = get("/1/statuses/show/#{id}.json", options)
+      status = get("/1.1/statuses/show/#{id}.json", options)
       Twitter::Status.new(status)
     end
 
@@ -2221,7 +2221,7 @@ module Twitter
 
     # Returns a single status with activity summary, specified by ID
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/show/:id
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/show/:id
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param id [Integer] The numerical ID of the desired status.
@@ -2232,21 +2232,21 @@ module Twitter
     #   Twitter.status_with_activity(25938088801)
     def status_with_activity(id, options={})
       activity = get("/i/statuses/#{id}/activity/summary.json", options)
-      status = get("/1/statuses/show/#{id}.json", options)
+      status = get("/1.1/statuses/show/#{id}.json", options)
       status.merge!(activity)
       Twitter::Status.new(status)
     end
 
     # Returns an oEmbed version of a single status, specified by ID or url to the tweet
     #
-    # @see https://dev.twitter.com/docs/api/1/get/statuses/oembed
+    # @see https://dev.twitter.com/docs/api/1.1/get/statuses/oembed
     # @rate_limited Yes
     # @requires_authentication No, unless the author of the status is protected
     # @param id [Integer] The numerical ID of the desired status to be embedded.
     # @param url [String] The url to the status to be embedded. ex: https://twitter.com/#!/twitter/status/25938088801
     # @param options [Hash] A customizable set of options.
     # @option options [Integer] :maxwidth The maximum width in pixels that the embed should be rendered at. This value is constrained to be between 250 and 550 pixels.
-    # @option options [Boolean, String, Integer] :hide_media Specifies whether the embedded Tweet should automatically expand images which were uploaded via {https://dev.twitter.com/docs/api/1/post/statuses/update_with_media POST statuses/update_with_media}. When set to either true, t or 1 images will not be expanded. Defaults to false.
+    # @option options [Boolean, String, Integer] :hide_media Specifies whether the embedded Tweet should automatically expand images which were uploaded via {https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media POST statuses/update_with_media}. When set to either true, t or 1 images will not be expanded. Defaults to false.
     # @option options [Boolean, String, Integer] :hide_thread Specifies whether the embedded Tweet should automatically show the original message in the case that the embedded Tweet is a reply. When set to either true, t or 1 the original Tweet will not be shown. Defaults to false.
     # @option options [Boolean, String, Integer] :omit_script Specifies whether the embedded Tweet HTML should include a `<script>` element pointing to widgets.js. In cases where a page already includes widgets.js, setting this value to true will prevent a redundant script element from being included. When set to either true, t or 1 the `<script>` element will not be included in the embed HTML, meaning that pages must include a reference to widgets.js manually. Defaults to false.
     # @option options [String] :align Specifies whether the embedded Tweet should be left aligned, right aligned, or centered in the page. Valid values are left, right, center, and none. Defaults to none, meaning no alignment styles are specified for the Tweet.
@@ -2256,17 +2256,17 @@ module Twitter
       case id_or_url
       when Integer
         id = id_or_url
-        oembed = get("/1/statuses/oembed.json?id=#{id}", options)
+        oembed = get("/1.1/statuses/oembed.json?id=#{id}", options)
       when String
         url = id_or_url
         escaped_url = URI.escape(url, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
-        oembed = get("/1/statuses/oembed.json?url=#{escaped_url}", options)
+        oembed = get("/1.1/statuses/oembed.json?url=#{escaped_url}", options)
       end
       Twitter::OEmbed.new(oembed)
     end
     # Destroys the specified status
     #
-    # @see https://dev.twitter.com/docs/api/1/post/statuses/destroy/:id
+    # @see https://dev.twitter.com/docs/api/1.1/post/statuses/destroy/:id
     # @note The authenticating user must be the author of the specified status.
     # @rate_limited No
     # @requires_authentication Yes
@@ -2278,13 +2278,13 @@ module Twitter
     # @example Destroy the status with the ID 25938088801
     #   Twitter.status_destroy(25938088801)
     def status_destroy(id, options={})
-      status = delete("/1/statuses/destroy/#{id}.json", options)
+      status = delete("/1.1/statuses/destroy/#{id}.json", options)
       Twitter::Status.new(status)
     end
 
     # Retweets a tweet
     #
-    # @see https://dev.twitter.com/docs/api/1/post/statuses/retweet/:id
+    # @see https://dev.twitter.com/docs/api/1.1/post/statuses/retweet/:id
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param id [Integer] The numerical ID of the desired status.
@@ -2295,7 +2295,7 @@ module Twitter
     # @example Retweet the status with the ID 28561922516
     #   Twitter.retweet(28561922516)
     def retweet(id, options={})
-      new_status = post("/1/statuses/retweet/#{id}.json", options)
+      new_status = post("/1.1/statuses/retweet/#{id}.json", options)
       orig_status = new_status.delete('retweeted_status')
       orig_status['retweeted_status'] = new_status
       Twitter::Status.new(orig_status)
@@ -2303,7 +2303,7 @@ module Twitter
 
     # Updates the authenticating user's status
     #
-    # @see https://dev.twitter.com/docs/api/1/post/statuses/update
+    # @see https://dev.twitter.com/docs/api/1.1/post/statuses/update
     # @note A status update with text identical to the authenticating user's current status will be ignored to prevent duplicates.
     # @rate_limited No
     # @requires_authentication Yes
@@ -2320,13 +2320,13 @@ module Twitter
     # @example Update the authenticating user's status
     #   Twitter.update("I'm tweeting with @gem!")
     def update(status, options={})
-      status = post("/1/statuses/update.json", options.merge(:status => status))
+      status = post("/1.1/statuses/update.json", options.merge(:status => status))
       Twitter::Status.new(status)
     end
 
     # Updates with media the authenticating user's status
     #
-    # @see http://dev.twitter.com/docs/api/1/post/statuses/update_with_media
+    # @see http://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
     # @note A status update with text/media identical to the authenticating user's current status will NOT be ignored
     # @requires_authentication Yes
     # @rate_limited No
@@ -2345,13 +2345,13 @@ module Twitter
     #   Twitter.update_with_media("I'm tweeting with @gem!", File.new('my_awesome_pic.jpeg'))
     #   Twitter.update_with_media("I'm tweeting with @gem!", {'io' => StringIO.new(pic), 'type' => 'jpg'})
     def update_with_media(status, image, options={})
-      status = post("/1/statuses/update_with_media.json", options.merge('media[]' => image, 'status' => status), :endpoint => media_endpoint)
+      status = post("/1.1/statuses/update_with_media.json", options.merge('media[]' => image, 'status' => status), :endpoint => media_endpoint)
       Twitter::Status.new(status)
     end
 
     # Returns extended information for up to 100 users
     #
-    # @see https://dev.twitter.com/docs/api/1/get/users/lookup
+    # @see https://dev.twitter.com/docs/api/1.1/get/users/lookup
     # @rate_limited Yes
     # @requires_authentication Yes
     # @overload users(*users, options={})
@@ -2367,14 +2367,14 @@ module Twitter
       options = args.last.is_a?(Hash) ? args.pop : {}
       users = args
       options.merge_users!(Array(users))
-      get("/1/users/lookup.json", options).map do |user|
+      get("/1.1/users/lookup.json", options).map do |user|
         Twitter::User.new(user)
       end
     end
 
     # Access the profile image in various sizes for the user with the indicated screen name
     #
-    # @see https://dev.twitter.com/docs/api/1/get/users/profile_image/:screen_name
+    # @see https://dev.twitter.com/docs/api/1.1/get/users/profile_image/:screen_name
     # @rate_limited No
     # @requires_authentication No
     # @overload profile_image(options={})
@@ -2393,12 +2393,12 @@ module Twitter
       options = args.last.is_a?(Hash) ? args.pop : {}
       user = args.pop || self.current_user.screen_name
       user = user.screen_name if user.is_a?(Twitter::User)
-      get("/1/users/profile_image/#{user}", options, :raw => true).headers['location']
+      get("/1.1/users/profile_image/#{user}", options, :raw => true).headers['location']
     end
 
     # Returns users that match the given query
     #
-    # @see https://dev.twitter.com/docs/api/1/get/users/search
+    # @see https://dev.twitter.com/docs/api/1.1/get/users/search
     # @rate_limited Yes
     # @requires_authentication Yes
     # @param query [String] The search query to run against people search.
@@ -2410,14 +2410,14 @@ module Twitter
     # @example Return users that match "Erik Michaels-Ober"
     #   Twitter.user_search("Erik Michaels-Ober")
     def user_search(query, options={})
-      get("/1/users/search.json", options.merge(:q => query)).map do |user|
+      get("/1.1/users/search.json", options.merge(:q => query)).map do |user|
         Twitter::User.new(user)
       end
     end
 
     # Returns extended information of a given user
     #
-    # @see https://dev.twitter.com/docs/api/1/get/users/show
+    # @see https://dev.twitter.com/docs/api/1.1/get/users/show
     # @rate_limited Yes
     # @requires_authentication No
     # @overload user(user, options={})
@@ -2431,9 +2431,9 @@ module Twitter
       options = args.last.is_a?(Hash) ? args.pop : {}
       if user = args.pop
         options.merge_user!(user)
-        user = get("/1/users/show.json", options)
+        user = get("/1.1/users/show.json", options)
       else
-        user = get("/1/account/verify_credentials.json", options)
+        user = get("/1.1/account/verify_credentials.json", options)
       end
       Twitter::User.new(user)
     end
@@ -2449,7 +2449,7 @@ module Twitter
     # @rate_limited Yes
     def user?(user, options={})
       options.merge_user!(user)
-      get("/1/users/show.json", options, :raw => true)
+      get("/1.1/users/show.json", options, :raw => true)
       true
     rescue Twitter::Error::NotFound
       false
@@ -2457,7 +2457,7 @@ module Twitter
 
     # Returns an array of users that the specified user can contribute to
     #
-    # @see http://dev.twitter.com/docs/api/1/get/users/contributees
+    # @see http://dev.twitter.com/docs/api/1.1/get/users/contributees
     # @rate_limited Yes
     # @requires_authentication No unless requesting it from a protected user
     #
@@ -2481,14 +2481,14 @@ module Twitter
       options.merge!(args.last.is_a?(Hash) ? args.pop : {})
       user = args.pop || self.current_user.screen_name
       options.merge_user!(user)
-      get("/1/users/contributees.json", options).map do |user|
+      get("/1.1/users/contributees.json", options).map do |user|
         Twitter::User.new(user)
       end
     end
 
     # Returns an array of users who can contribute to the specified account
     #
-    # @see http://dev.twitter.com/docs/api/1/get/users/contributors
+    # @see http://dev.twitter.com/docs/api/1.1/get/users/contributors
     # @rate_limited Yes
     # @requires_authentication No unless requesting it from a protected user
     #
@@ -2512,7 +2512,7 @@ module Twitter
       options.merge!(args.last.is_a?(Hash) ? args.pop : {})
       user = args.pop || self.current_user.screen_name
       options.merge_user!(user)
-      get("/1/users/contributors.json", options).map do |user|
+      get("/1.1/users/contributors.json", options).map do |user|
         Twitter::User.new(user)
       end
     end
@@ -2544,7 +2544,7 @@ module Twitter
       user = args.pop || self.current_user.screen_name
       options.merge_user!(user)
       options[:excluded] = options[:excluded].join(',') if options[:excluded].is_a?(Array)
-      get("/1/users/recommendations.json", options).map do |recommendation|
+      get("/1.1/users/recommendations.json", options).map do |recommendation|
         Twitter::User.new(recommendation['user'])
       end
     end
