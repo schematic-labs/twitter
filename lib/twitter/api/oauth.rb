@@ -1,5 +1,7 @@
 require 'twitter/api/utils'
 require 'twitter/token'
+require 'twitter/request_token'
+require 'twitter/access_token'
 
 module Twitter
   module API
@@ -38,6 +40,23 @@ module Twitter
       def invalidate_token(access_token)
         access_token = access_token.access_token if access_token.is_a?(Twitter::Token)
         object_from_response(Twitter::Token, :post, "/oauth2/invalidate_token", :access_token => access_token)
+      end
+
+      def oauth_request_token(callback_url)
+        object_from_response(Twitter::RequestToken, :post, "/oauth/request_token", :oauth_callback => callback_url, :oauth_token_request => true)
+      end
+
+      def oauth_redirect_url(oauth_token, query_params = {})
+        url = "#{@endpoint}/oauth/authenticate?oauth_token=#{oauth_token}"
+        unless query_params.empty?
+          url << "&#{query_params.collect { |key, value| "#{key}=#{value}" }.sort * '&'}"
+        end
+
+        url
+      end
+
+      def oauth_access_token(oauth_verifier)
+        object_from_response(Twitter::AccessToken, :post, "/oauth/access_token", :oauth_verifier => oauth_verifier, :oauth_token_request => true)
       end
     end
   end
