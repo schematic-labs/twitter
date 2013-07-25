@@ -176,7 +176,7 @@ This may be useful if you're using multiple consumer key/secret pairs.
 
 #### Middleware
 The Faraday middleware stack is fully configurable and is exposed as a
-`Faraday::Builder` object. You can modify the default middleware in-place:
+`Faraday::RackBuilder` object. You can modify the default middleware in-place:
 
 ```ruby
 Twitter.middleware.insert_after Twitter::Response::RaiseError, CustomMiddleware
@@ -185,7 +185,7 @@ Twitter.middleware.insert_after Twitter::Response::RaiseError, CustomMiddleware
 A custom adapter may be set as part of a custom middleware stack:
 
 ```ruby
-Twitter.middleware = Faraday::Builder.new(
+Twitter.middleware = Faraday::RackBuilder.new(
   &Proc.new do |builder|
     # Specify a middleware stack here
     builder.adapter :some_other_adapter

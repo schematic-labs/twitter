@@ -22,7 +22,7 @@ module Twitter
       },
     } unless defined? Twitter::Default::CONNECTION_OPTIONS
     IDENTITY_MAP = false unless defined? Twitter::Default::IDENTITY_MAP
-    MIDDLEWARE = Faraday::Builder.new do |builder|
+    MIDDLEWARE = Faraday::RackBuilder.new do |builder|
       # Convert file uploads to Faraday::UploadIO objects
       builder.use Twitter::Request::MultipartWithFile
       # Checks for files in the payload
@@ -92,7 +92,7 @@ module Twitter
       # @note Faraday's middleware stack implementation is comparable to that of Rack middleware.  The order of middleware is important: the first middleware on the list wraps all others, while the last middleware is the innermost one.
       # @see https://github.com/technoweenie/faraday#advanced-middleware-usage
       # @see http://mislav.uniqpath.com/2011/07/faraday-advanced-http/
-      # @return [Faraday::Builder]
+      # @return [Faraday::RackBuilder]
       def middleware
         MIDDLEWARE
       end
